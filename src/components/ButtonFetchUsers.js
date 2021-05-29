@@ -4,7 +4,7 @@ const ButtonFetchUsers = props => (
         border: '2px solid black',
         backgroundColor: 'white',
         margin: '20px'
-    }} onClick={props.click}>{props.text}</button>
+    }} onClick={props.click.bind(this, props.fetchedUsersNumber)}>{props.text}</button>
 )
 
 export default ButtonFetchUsers;

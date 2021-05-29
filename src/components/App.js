@@ -10,8 +10,8 @@ class App extends Component {
     users: [],
   }
 
-  handleDataFetch = () => {
-    fetch(`${API}5`)
+  handleDataFetch = (usersNumber) => {
+    fetch(`${API}${usersNumber}`)
     .then(response => {
       if (response.ok) {
         return response;
@@ -20,39 +20,27 @@ class App extends Component {
     })
     .then(response => response.json())
     .then(data => {
-      this.setState({
-        users: data.results,
-      })
-    })
-    .catch(error => console.log(error))
-  }
-
-  handleDataFetchOne = () => {
-    fetch(`${API}1`)
-    .then(response => {
-      if (response.ok) {
-        return response;
-      }
-      throw Error("Błąd!");
-    })
-    .then(response => response.json())
-    .then(data => {
-      const user = data.results;
-      this.setState(prevState => ({
+      if (Number(usersNumber) === 5) {
+        this.setState({
+          users: data.results,
+        })
+      } else if (Number(usersNumber) === 1) {
+        const user = data.results;
+        this.setState(prevState => ({
         users: prevState.users.concat(user)
       }))
+      }
     })
     .catch(error => console.log(error))
   }
 
   render() {
     const users = this.state.users;
-    console.log(users)
-    
+
     return (
       <div className="App">
-        <ButtonFetchUsers click={this.handleDataFetch} text="Pokaż 5 użytkowników"/>
-        <ButtonFetchUsers click={this.handleDataFetchOne} text="Dodaj użytkownika"/>
+        <ButtonFetchUsers click={this.handleDataFetch} text="Pokaż 5 użytkowników" fetchedUsersNumber="5"/>
+        <ButtonFetchUsers click={this.handleDataFetch} text="Dodaj użytkownika" fetchedUsersNumber="1"/>
        { users.length > 0 ? <UsersList users={users}/> : users}
       </div>
     );

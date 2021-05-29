@@ -7,7 +7,7 @@ const API = 'https://randomuser.me/api/?results=';
 
 class App extends Component {
   state = {
-    users: null,
+    users: [],
   }
 
   handleDataFetch = () => {
@@ -28,7 +28,21 @@ class App extends Component {
   }
 
   handleDataFetchOne = () => {
-    console.log('handleDataFetchOne')
+    fetch(`${API}1`)
+    .then(response => {
+      if (response.ok) {
+        return response;
+      }
+      throw Error("Błąd!");
+    })
+    .then(response => response.json())
+    .then(data => {
+      const user = data.results;
+      this.setState(prevState => ({
+        users: prevState.users.concat(user)
+      }))
+    })
+    .catch(error => console.log(error))
   }
 
   render() {
@@ -39,7 +53,7 @@ class App extends Component {
       <div className="App">
         <ButtonFetchUsers click={this.handleDataFetch} text="Pokaż 5 użytkowników"/>
         <ButtonFetchUsers click={this.handleDataFetchOne} text="Dodaj użytkownika"/>
-       { users ? <UsersList users={users}/> : users}
+       { users.length > 0 ? <UsersList users={users}/> : users}
       </div>
     );
   }
